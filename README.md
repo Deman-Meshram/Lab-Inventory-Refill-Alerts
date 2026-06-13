@@ -35,63 +35,21 @@ Lab Inventory & Refill Alert automatically monitors all inventory levels and exp
 
 ---
 
-## Time & Effort Saved
+## How It Works For The User
 
-| Task | Manual | This Automation |
-|---|---|---|
-| Checking stock levels | Daily manual check | Zero — fully automatic |
-| Identifying critical items | Visual scanning | Auto-detected instantly |
-| Checking expiry dates | Manual date checking | Auto-detected instantly |
-| Notifying team | Manual email | Auto-delivered to Gmail |
-| Tracking reorder needs | Sticky notes/memory | Clear reorder list in email |
+**Lab manager do only 2 things:**
+1. Current Stock number update karo jab bhi restock ho
+2. Expiry Date daalo jab naya reagent aaye
 
----
+**Everything else is fully automatic:**
+- Stock Status — GOOD / LOW / CRITICAL — formula automatically calculate karta hai
+- Expiry Status — VALID / EXPIRING SOON / EXPIRED — formula automatically detect karta hai
+- Alert email — scheduled trigger pe automatically aata hai
+- Reorder list — automatically banta hai critical items se
+- Expiry alerts — automatically detect aur email mein include hote hain
 
-## Final Output
-
-- ✅ Inventory Summary — Total / Critical / Low / Expired / Expiring Soon
-- ✅ Color-coded table — Stock Status + Expiry Status per item
-- ✅ Immediate Reorder List — critical stock items
-- ✅ Expiry Alerts — expired and expiring soon items with dates
-- ✅ Supplier name per item for quick reordering
-- ✅ Professional HTML Gmail alert
-
----
-
-## What It Does
-
-Automatically monitors lab inventory levels and expiry dates in Airtable, detects issues, and sends formatted Gmail alerts.
-
-- **Auto status detection** — GOOD / LOW / CRITICAL calculated automatically
-- **Expiry tracking** — VALID / EXPIRING SOON / EXPIRED per item
-- **Inventory Summary** — Total / Critical / Low / Expired / Expiring Soon count
-- **Refill alerts** — Gmail notification when stock is low
-- **Reorder list** — critical items highlighted separately for action
-- **Expiry alerts** — expired and expiring soon items listed with dates
-- **Multi-item monitoring** — tracks all lab items simultaneously
-- **Airtable database** — full inventory management with history
-- **Scheduled automation** — runs automatically, no manual trigger needed
-
----
-
-## Tech Stack
-
-| Layer | Tool |
-|---|---|
-| Automation | n8n workflow |
-| Database | Airtable |
-| Email | Gmail HTML |
-
----
-
-## Architecture
-
-```
-Scheduled trigger (n8n)
-        ↓
-Airtable fetches LOW/CRITICAL + EXPIRED/EXPIRING SOON items
-        ↓
-Formula fields calculate Stock Status + Expiry Status
+**Zero configuration needed after setup — just update stock numbers and dates, everything else is automatic.**
+Formula fields calculate Stock Status + Expiry Status automatically
         ↓
 Loop Over Items — process each alert
         ↓
@@ -104,17 +62,17 @@ Gmail sends formatted refill + expiry alert
 
 ## Airtable Schema
 
-| Field | Type |
-|---|---|
-| Item Name | Single line text |
-| Current Stock | Number |
-| Minimum Threshold | Number |
-| Unit | Single select (L, mL, g, mg, pcs, box) |
-| Supplier | Single line text |
-| Status | Formula (auto) |
-| Expiry Date | Date |
-| Expiry Status | Formula (auto) |
-| Last Alerted | Date |
+| Field | Type | Updated By |
+|---|---|---|
+| Item Name | Single line text | Manual (once) |
+| Current Stock | Number | Manual (on restock) |
+| Minimum Threshold | Number | Manual (once) |
+| Unit | Single select | Manual (once) |
+| Supplier | Single line text | Manual (once) |
+| Status | Formula (auto) | ✅ Automatic |
+| Expiry Date | Date | Manual (on restock) |
+| Expiry Status | Formula (auto) | ✅ Automatic |
+| Last Alerted | Date | ✅ Automatic |
 
 ---
 
@@ -140,7 +98,7 @@ IF({Expiry Date}="", "No Date",
 ## Technical Notes
 
 - Status field: Formula type in Airtable (not Single Select)
-- Expiry Status field: Formula type in Airtable
+- Expiry Status field: Formula type in Airtable — updates automatically every day
 - Airtable filter: `OR({Status}='LOW', {Status}='CRITICAL', {Expiry Status}='EXPIRED', {Expiry Status}='EXPIRING SOON')`
 - Loop Over Items node for correct multi-item processing
 - JavaScript node builds HTML with summary + reorder list + expiry alerts
