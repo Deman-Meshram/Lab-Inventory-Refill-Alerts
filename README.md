@@ -1,10 +1,5 @@
 # Lab Inventory & Refill - Expiry Alert System — Biotech Lab Automation
 
-## 🎬 Demo Video
-[▶ Watch Demo on YouTube](https://youtu.be/S0Wpnj3XEz4)
-
----
-
 > Smart inventory monitoring with automatic LOW/CRITICAL detection, refill alerts, and expiry tracking.
 
 
